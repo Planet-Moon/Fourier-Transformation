@@ -46,24 +46,18 @@ def compute_dft_real_pair(inreal, inimag, N):
 		outimag.append(sumimag)
 	return (outreal, outimag)
 
-def gen_sinus(amp: float, freq: float, phase: float, time: float, Fs: float):
+def gen_sinus(amp: float, freq: float, phase: float, time: list):
     sinusList = []
-    timeList= []
-    samples = math.floor(time * Fs)
-    currentTime = 0.0
-    for i in range(samples):
-        timeList.append(currentTime)
-        sinusList.append(amp * math.sin(2 * math.pi * freq * currentTime + phase))
-        currentTime += 1/Fs
-    return sinusList, timeList
+    for t in time:
+        sinusList.append(amp * math.sin(2 * math.pi * freq * t + phase))
+    return sinusList
 
-def gen_rect(amp: float, freq: float, phase: float, time: float, Fs: float):
+def gen_rect(amp: float, freq: float, phase: float, time: list):
     rectList = []
-    timeList = []
-    samples = math.floor(time * Fs)
-    currentTime = 0.0
-    for i in range(samples):
-        timeList.append(currentTime)
-        rectList.append(amp * round(math.sin(2 * math.pi * freq * currentTime + phase)))
-        currentTime += 1/Fs
-    return rectList, timeList
+    for t in time:
+        tmp = math.sin(2 * math.pi * freq * t + phase)
+        if tmp >= 0:
+            rectList.append(amp * 1)
+        else: 
+            rectList.append(amp * 0)
+    return rectList

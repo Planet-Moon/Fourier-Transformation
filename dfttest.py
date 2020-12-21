@@ -2,23 +2,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import dft
+import math
 
 amp = 1.0
 freq = 50 # Hz
 phase = 0 # s
 time = 1 # s
 Fs = 3000 # Hz sample frequency
-
-sinusTest, timeTest = gen_sinus(amp=amp, freq=freq, phase=phase, time=time, Fs=Fs)
-sinusTest2, timeTest2 = gen_sinus(amp=amp*2, freq=freq*2, phase=phase, time=time, Fs=Fs)
-rectTest, timeTest3 = gen_rect(amp=amp, freq=freq/2, phase=phase, time=time, Fs=Fs)
+time_vec = np.arange(0, time, 1/Fs)
+sinusTest = dft.gen_sinus(amp=amp, freq=freq, phase=phase, time=time_vec)
+sinusTest2 = dft.gen_sinus(amp=amp*2, freq=freq*2, phase=phase, time=time_vec)
+rectTest = dft.gen_rect(amp=amp, freq=freq/2, phase=phase, time=time_vec)
 
 noise = np.random.normal(0,1,len(sinusTest))
 # 0 is the mean of the normal distribution you are choosing from
 # 1 is the standard deviation of the normal distribution
 # 100 is the number of elements you get in array noise
 plt.figure()
-plt.plot(timeTest, noise)
+plt.plot(time_vec, noise)
 plt.title('noise')
 plt.ylabel('noise')
 plt.xlabel('t [s]')
@@ -28,12 +29,12 @@ for i in range(len(sinusTest)):
 
 # Timeseries plot
 plt.figure()
-plt.plot(timeTest, sinusTest)
+plt.plot(time_vec, sinusTest)
 plt.title('sinusTest')
 plt.ylabel('sinus')
 plt.xlabel('t [s]')
 
-zero_list = np.zeros(len(timeTest))
+zero_list = np.zeros(len(time_vec))
 dft_real, dft_imag = dft.compute_dft_real_pair(sinusTest, zero_list, 2000)
 dft_abs = np.zeros(len(dft_real))
 dft_arg = np.zeros(len(dft_real))

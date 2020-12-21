@@ -85,23 +85,24 @@ def plot_spectrum(time, signal, complex_enable: bool):
     plt.show()
     pass
 
-amp = 2.0
-freq = 100 # Hz
-phase = 0 # Pi
-time = 2 # s
-Fs = 2048 # Hz sample frequency
-time_vec = np.arange(0, time, 1/Fs)
-signal_list = {}
-signal_list["rect_vec"] = np.array(gen_rect(amp=amp, freq=freq, phase=phase, time=time_vec))
-signal_list["sinus_vec"] = np.array(gen_sinus(amp=amp, freq=freq, phase=phase, time=time_vec), dtype=complex)
-signal_list["noise"] = np.random.normal(0,1,len(time_vec))
-signal = np.zeros(len(time_vec), dtype=complex)
-for i in signal_list:
-    signal += signal_list[i]
-    
-plot_spectrum(time_vec, signal, False)
+if __name__ == "__main__":
+    amp = 2.0
+    freq = 100 # Hz
+    phase = 0 # Pi
+    time = 2 # s
+    Fs = 2048 # Hz sample frequency
+    time_vec = np.arange(0, time, 1/Fs)
+    signal_list = {}
+    signal_list["rect_vec"] = np.array(gen_rect(amp=amp, freq=freq, phase=phase, time=time_vec))
+    signal_list["sinus_vec"] = np.array(gen_sinus(amp=amp, freq=freq, phase=phase, time=time_vec), dtype=complex)
+    signal_list["noise"] = np.random.normal(0,1,len(time_vec))
+    signal = np.zeros(len(time_vec), dtype=complex)
+    for i in signal_list:
+        signal += signal_list[i]
+        
+    plot_spectrum(time_vec, signal, False)
 
-time_vec = np.array([0,1,2,3,4,5,6,7], dtype=complex)
-signal = np.array([0,1,2,2,1,0,-1,-2], dtype=complex)
-plot_spectrum(time_vec, signal, False)
-pass
+    time_vec = np.array([0,1,2,3,4,5,6,7], dtype=complex)
+    signal = np.array([0,1,2,2,1,0,-1,-2], dtype=complex)
+    plot_spectrum(time_vec, signal, False)
+    pass
