@@ -2,6 +2,7 @@ import pyaudio
 import matplotlib.pyplot as plt
 import numpy as np
 import dft
+from fft import fft
 import math
 
 
@@ -38,7 +39,8 @@ ax[0].set_title("Raw Audio Signal")
 # Plot 1 is for the FFT of the audio
 li2, = ax[1].plot(x, y)
 ax[1].set_xlim(0,RATE/2)
-ax[1].set_ylim(0,100000)
+# ax[1].set_ylim(-30,80)
+ax[1].set_ylim(0,10**6)
 ax[1].set_title("Fast Fourier Transform")
 # Show the plot, but without blocking updates
 plt.pause(0.01)
@@ -52,14 +54,16 @@ while True:
     li.set_ydata(audio_data)
 
     zero_list = np.zeros(len(audio_data))
-    dft_real, dft_imag = dft.compute_dft_real_pair(audio_data, zero_list, 100)
+    # dft_real, dft_imag = dft.compute_dft_real_pair(audio_data, zero_list, 100)
+    dft_real, dft_imag = fft(audio_data, zero_list)
     dft_abs = np.zeros(len(dft_real))
     dft_arg = np.zeros(len(dft_real))
     for i in range(len(dft_abs)):
         dft_abs[i] = math.sqrt(dft_real[i]**2 + dft_imag[i]**2)
         dft_arg[i] = math.atan2(dft_imag[i], dft_real[i])
-    dftFreqList = np.linspace(0, RATE/2, len(dft_abs))
+    dftFreqList = np.linspace(0, RATE, len(dft_abs))
     li2.set_xdata(dftFreqList)
+    # li2.set_ydata(10.*np.log10(dft_abs))
     li2.set_ydata(dft_abs)
     plt.pause(0.01)
     pass
