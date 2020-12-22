@@ -73,7 +73,7 @@ def plot_spectrum(time, signal, complex_enable: bool):
     fftFreqList = np.linspace(0, Fs, len(fft_abs))
     plt.figure()
     plt.subplot(211)
-    plt.plot(fftFreqList, 10.*np.log10(fft_abs))
+    plt.plot(fftFreqList, 20.*np.log10(fft_abs))
     plt.title('sinusTest spectrum')
     plt.ylabel('Abs [dB]')
     plt.xlabel('f')
@@ -100,9 +100,5 @@ if __name__ == "__main__":
     for i in signal_list:
         signal += signal_list[i]
         
-    plot_spectrum(time_vec, signal, False)
-
-    time_vec = np.array([0,1,2,3,4,5,6,7], dtype=complex)
-    signal = np.array([0,1,2,2,1,0,-1,-2], dtype=complex)
     plot_spectrum(time_vec, signal, False)
     pass
