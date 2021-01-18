@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from dft import gen_rect, gen_sinus
+from dft import gen_rect, gen_sinus, gen_sawtooth
 import matplotlib.pyplot as plt
 import cmath
 import fftUtils
@@ -147,13 +147,15 @@ if __name__ == "__main__":
     freq = 10 # Hz
     phase = 0 # Pi
     time = 1 # s
-    Fs = 1024 # Hz sample frequency
+    Fs = 256 # Hz sample frequency
     time_vec = np.arange(0, time, 1/Fs)
     signal_list = {}
-    signal_list["rect_vec"] = np.array(gen_rect(amp=amp, freq=freq, phase=phase, time=time_vec))
-    signal_list["sinus_vec"] = np.array(gen_sinus(amp=amp, freq=freq*7, phase=phase, time=time_vec), dtype=complex)
-    signal_list["sinus_vec2"] = np.array(gen_sinus(amp=amp, freq=freq*11, phase=phase, time=time_vec), dtype=complex)
-    signal_list["noise"] = np.random.normal(0,0.0001,len(time_vec))
+    signal_list["rect_vec"] = np.array(gen_rect(amp=amp*2, freq=freq, phase=phase, time=time_vec))
+    signal_list["sinus_vec"] = np.array(gen_sinus(amp=amp, freq=freq*3, phase=phase, time=time_vec), dtype=complex)
+    signal_list["sinus_vec2"] = np.array(gen_sinus(amp=amp, freq=freq*2, phase=phase, time=time_vec), dtype=complex)
+    signal_list["noise"] = np.random.normal(0,0.001,len(time_vec))
+    signal_list["gen_sawtooth"] = np.array(gen_sawtooth(amp=amp*2, freq=freq/5, phase=phase, time=time_vec), dtype=complex)
+    signal_list["constant"] = np.zeros(len(time_vec), dtype=complex) + 0.2
     signal = np.zeros(len(time_vec), dtype=complex)
     for i in signal_list:
         signal += signal_list[i]
