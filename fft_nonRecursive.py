@@ -93,7 +93,7 @@ def dif_fft0 (f: list):
 
 def plot_spectrum(time, signal, Fs):
     plt.figure()
-    plt.plot(time_vec, signal.real)
+    plt.plot(time, signal.real)
     plt.title('Signal')
     plt.ylabel('')
     plt.xlabel('t')
