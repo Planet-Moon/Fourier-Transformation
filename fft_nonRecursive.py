@@ -99,6 +99,13 @@ def plot_spectrum(time, signal, Fs):
     plt.xlabel('t')
         
     fft_complex_result = dif_fft4(signal)
+    fftFreqList = np.linspace(0, Fs, len(fft_complex_result))
+    plt.figure()
+    plt.plot(fftFreqList, 20*np.log10(abs(fft_complex_result)))
+    plt.title('Raw return of fft')
+    plt.ylabel('')
+    plt.xlabel('Hz')
+    
     fft_abs = np.zeros(len(fft_complex_result))
     fft_arg = np.zeros(len(fft_complex_result))
     for i in range(len(fft_abs)):
