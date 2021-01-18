@@ -119,7 +119,7 @@ def plot_spectrum(time, signal, Fs):
     np_fft_freq = np.fft.fftfreq(len(signal))
     np_fft_freq = np_fft_freq[range(int(len(signal)/2))] * Fs
     
-    fftFreqList = np.linspace(0, Fs/2-1, len(fft_abs))
+    fftFreqList = np.linspace(0, Fs/2, len(fft_abs))
     plt.figure()
     plt.subplot(211)
     plt.plot(fftFreqList, 20*np.log10(fft_abs), label='myFFT') # meine FFT
