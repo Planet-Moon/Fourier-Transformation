@@ -97,14 +97,16 @@ def plot_spectrum(time, signal, Fs):
     plt.title('Signal')
     plt.ylabel('')
     plt.xlabel('t')
-        
+    
     fft_complex_result = dif_fft4(signal)
-    fftFreqList = np.linspace(0, Fs, len(fft_complex_result))
-    plt.figure()
-    plt.plot(fftFreqList, 20*np.log10(abs(fft_complex_result)))
-    plt.title('Raw return of fft')
-    plt.ylabel('')
-    plt.xlabel('Hz')
+    
+    if(False):
+        fftFreqList = np.linspace(0, Fs, len(fft_complex_result), endpoint=False)
+        plt.figure()
+        plt.plot(fftFreqList, 20*np.log10(abs(fft_complex_result)))
+        plt.title('Raw return of fft')
+        plt.ylabel('')
+        plt.xlabel('Hz')
     
     fft_abs = np.zeros(len(fft_complex_result))
     fft_arg = np.zeros(len(fft_complex_result))
@@ -116,10 +118,10 @@ def plot_spectrum(time, signal, Fs):
         
     np_fft = np.fft.fft(signal)
     np_fft = np_fft[range(int(len(signal)/2))]
-    np_fft_freq = np.fft.fftfreq(len(signal))
-    np_fft_freq = np_fft_freq[range(int(len(signal)/2))] * Fs
+    np_fft_freq = np.fft.fftfreq(len(signal), 1/Fs)
+    np_fft_freq = np_fft_freq[range(int(len(signal)/2))]
     
-    fftFreqList = np.linspace(0, Fs/2, len(fft_abs))
+    fftFreqList = np.linspace(0, int(Fs/2), len(fft_abs), endpoint=False)
     plt.figure()
     plt.subplot(211)
     plt.plot(fftFreqList, 20*np.log10(fft_abs), label='myFFT') # meine FFT
