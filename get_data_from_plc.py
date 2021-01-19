@@ -5,7 +5,7 @@ import threading
 import time
 import matplotlib.pyplot as plt
 
-time_length = 256
+time_length = 1024
 time_vector = [np.zeros(time_length), np.zeros(time_length, dtype=complex)]
 fft_vector = [np.zeros(time_length), np.zeros(time_length, dtype=complex)]
 fft_plc_vector = [np.zeros(time_length), np.zeros(time_length, dtype=complex)]
@@ -25,18 +25,18 @@ def plot():
     y = np.random.randn(10000)
     # Plot 0 is for raw data
     li, = ax[0].plot(x, y)
-    ax[0].set_xlim(0,256)
-    ax[0].set_ylim(-2,2)
+    ax[0].set_xlim(0,5.2)
+    ax[0].set_ylim(-10,10)
     ax[0].set_title("Raw Signal")
     # Plot 1 is for the FFT
     li2, = ax[1].plot(x, y)
-    ax[1].set_xlim(0,256)
+    ax[1].set_xlim(0,100)
     ax[1].set_ylim(-25,50)
     ax[1].set_title("Fast Fourier Transform")
     # Plot 1 is for the FFT of the plc
     li3, = ax[2].plot(x, y)
-    ax[2].set_xlim(0,256)
-    ax[2].set_ylim(-25,80)
+    ax[2].set_xlim(0,100)
+    ax[2].set_ylim(-25,50)
     ax[2].set_title("Fast Fourier Transform of plc")
     # Show the plot, but without blocking updates
     plt.pause(0.01)
@@ -44,12 +44,23 @@ def plot():
     
     while True:
         if plot_new_data:
-            li.set_xdata(np.arange(len(time_vector[0])))
+            
+            max_frequency = [0, 0]
+            for i in range(int(len(fft_plc_vector[1])/2)):
+                tmp = abs(fft_vector[1][i])
+                if tmp > max_frequency[1]:
+                    max_frequency[0] = fft_vector[0][i]
+                    max_frequency[1] = tmp
+                    i_max = i
+                    pass
+            print("dom_frequency: {} Hz, mag: {} dB".format(max_frequency[0], 20*np.log10(max_frequency[1])))
+            
+            li.set_xdata(time_vector[0])
             li.set_ydata(time_vector[1])
-            li2.set_xdata(np.arange(len(fft_vector[0])))
-            li2.set_ydata(20*np.log10(abs(fft_vector[1])))
-            li3.set_xdata(np.arange(len(fft_plc_vector[0])))
-            li3.set_ydata(20*np.log10(abs(fft_plc_vector[1])))
+            li2.set_xdata(fft_vector[0][:len(fft_vector[0]/2)])
+            li2.set_ydata(20*np.log10(abs(fft_vector[1][:len(fft_vector[1]/2)])))
+            li3.set_xdata(fft_plc_vector[0][:len(fft_plc_vector[0]/2)])
+            li3.set_ydata(20*np.log10(abs(fft_plc_vector[1][:len(fft_plc_vector[1]/2)])))
             plt.pause(0.01)
             plot_new_data = False
         else:
@@ -65,14 +76,15 @@ def thread_plc():
         if not plot_new_data:
             plc.open()
             # symbols_list = plc.get_all_symbols()
-            time_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Data", pyads.PLCTYPE_LREAL * (256*2))
-            fft_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Result", pyads.PLCTYPE_LREAL * (256*2))
+            time_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Data", pyads.PLCTYPE_REAL * (1024*2))
+            fft_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Result", pyads.PLCTYPE_REAL * (1024*2))
             plc.close()
             time_vector[1] = format_complex_array(time_vector_temp)
             fft_plc_vector[1] = format_complex_array(fft_vector_temp)
-            time_duration = 1.28
+            time_duration = 5.12
             Fs = 200
             time_vector[0] = np.arange(0, time_duration, 1/Fs)
+            fft_plc_vector[0] = np.linspace(0, Fs, len(fft_plc_vector[1]), endpoint=False)
             fft_vector[1] = fft_nonRecursive.dif_fft4(time_vector[1])
             fft_vector[0] = np.linspace(0, Fs, len(fft_vector[1]), endpoint=False)
             plot_new_data = True
