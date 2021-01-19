@@ -11,7 +11,7 @@ def dif_fft4(f: list):
     '''
     pot_of_4 = math.log(len(f))/math.log(4)
     if pot_of_4%1 > 0:
-        raise ValueError("not a number of 4**{}".format(pot_of_4))
+        raise ValueError("not a number of 4**x")
     out = f.copy()
     svar = int(np.log(len(out))/np.log(4))
     nvar = len(out)
