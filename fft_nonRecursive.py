@@ -148,9 +148,9 @@ if __name__ == "__main__":
     amp = 2.0
     freq = 10 # Hz
     phase = 0 # Pi
-    time = 1 # s
-    Fs = 256 # Hz sample frequency
-    time_vec = np.arange(0, time, 1/Fs)
+    time_duration = 5.12 # s
+    Fs = 200 # Hz sample frequency
+    time_vec = np.arange(0, time_duration, 1/Fs)
     signal_list = {}
     signal_list["rect_vec"] = np.array(gen_rect(amp=amp*2, freq=freq, phase=phase, time=time_vec))
     signal_list["sinus_vec"] = np.array(gen_sinus(amp=amp, freq=freq*3, phase=phase, time=time_vec), dtype=complex)
@@ -158,6 +158,7 @@ if __name__ == "__main__":
     signal_list["noise"] = np.random.normal(0,0.001,len(time_vec))
     signal_list["gen_sawtooth"] = np.array(gen_sawtooth(amp=amp*2, freq=freq/5, phase=phase, time=time_vec), dtype=complex)
     signal_list["constant"] = np.zeros(len(time_vec), dtype=complex) + 0.2
+    signal_list["sinus_vec3"] = np.array(gen_sinus(amp=amp, freq=4, phase=phase, time=time_vec), dtype=complex)
     signal = np.zeros(len(time_vec), dtype=complex)
     for i in signal_list:
         signal += signal_list[i]
