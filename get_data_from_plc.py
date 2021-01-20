@@ -72,12 +72,15 @@ def thread_plc():
     remote_ip = '192.168.20.157'
     remote_ads = '192.168.30.202.1.1'
     plc = pyads.Connection(remote_ads, pyads.PORT_TC3PLC1, remote_ip)
+    plc.open()
+    symbols_list = plc.get_all_symbols()
+    plc.close()
     while True:
         if not plot_new_data:
             plc.open()
-            # symbols_list = plc.get_all_symbols()
-            time_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Data", pyads.PLCTYPE_REAL * (1024*2))
-            fft_vector_temp = plc.read_by_name("KrogstrupMBE2.FFT_Result", pyads.PLCTYPE_REAL * (1024*2))
+            namespace = "KrogstrupMBE2.temperatureController[4].znTuner"
+            time_vector_temp = plc.read_by_name(namespace+".FFT_IN", pyads.PLCTYPE_REAL * (1024*2))
+            fft_vector_temp = plc.read_by_name(namespace+".FFT_OUT", pyads.PLCTYPE_REAL * (1024*2))
             plc.close()
             time_vector[1] = format_complex_array(time_vector_temp)
             fft_plc_vector[1] = format_complex_array(fft_vector_temp)
