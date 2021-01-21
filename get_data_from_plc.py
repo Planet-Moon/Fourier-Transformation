@@ -5,6 +5,8 @@ import threading
 import time
 import matplotlib.pyplot as plt
 
+Fs = 50
+time_duration = 5.12*200/Fs
 time_length = 1024
 time_vector = [np.zeros(time_length), np.zeros(time_length, dtype=complex)]
 fft_vector = [np.zeros(time_length), np.zeros(time_length, dtype=complex)]
@@ -25,18 +27,18 @@ def plot():
     y = np.random.randn(10000)
     # Plot 0 is for raw data
     li, = ax[0].plot(x, y)
-    ax[0].set_xlim(0,5.2)
+    ax[0].set_xlim(0,time_duration)
     ax[0].set_ylim(-10,10)
     ax[0].set_title("Raw Signal")
     # Plot 1 is for the FFT
     li2, = ax[1].plot(x, y)
-    ax[1].set_xlim(0,100)
-    ax[1].set_ylim(-25,50)
+    ax[1].set_xlim(0,Fs/2)
+    ax[1].set_ylim(-50,50)
     ax[1].set_title("Fast Fourier Transform")
     # Plot 1 is for the FFT of the plc
     li3, = ax[2].plot(x, y)
-    ax[2].set_xlim(0,100)
-    ax[2].set_ylim(-25,50)
+    ax[2].set_xlim(0,Fs/2)
+    ax[2].set_ylim(-50,50)
     ax[2].set_title("Fast Fourier Transform of plc")
     # Show the plot, but without blocking updates
     plt.pause(0.01)
@@ -84,8 +86,7 @@ def thread_plc():
             plc.close()
             time_vector[1] = format_complex_array(time_vector_temp)
             fft_plc_vector[1] = format_complex_array(fft_vector_temp)
-            time_duration = 5.12
-            Fs = 200
+            
             time_vector[0] = np.arange(0, time_duration, 1/Fs)
             fft_plc_vector[0] = np.linspace(0, Fs, len(fft_plc_vector[1]), endpoint=False)
             fft_vector[1] = fft_nonRecursive.dif_fft4(time_vector[1])
