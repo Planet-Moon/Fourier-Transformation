@@ -61,3 +61,11 @@ def gen_rect(amp: float, freq: float, phase: float, time: list):
         else: 
             rectList.append(amp * 0)
     return rectList
+
+def gen_sawtooth(amp: float, freq: float, phase: float, time:list):
+    sawtoothList = []
+    period = 1/freq
+    for t in time:
+        tmp = amp * (t/period - math.floor(t/period))
+        sawtoothList.append(tmp)
+    return sawtoothList    
