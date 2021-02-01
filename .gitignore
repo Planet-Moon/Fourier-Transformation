@@ -1,2 +1,3 @@
-*.zip.
+*.zip
 *.pyc
+dft_env
